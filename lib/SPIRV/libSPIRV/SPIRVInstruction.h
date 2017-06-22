@@ -1867,7 +1867,7 @@ public:
     setHasNoId();
     setHasNoType();
   }
-  SPIRVCapVec getRequiredCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityKernel);
   }
   SPIRVValue *getObject() { return getValue(Object); };
@@ -1953,7 +1953,7 @@ enum SPIRVOpKind {
 
 class SPIRVDevEnqInstBase:public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityDeviceEnqueue);
   }
 };
@@ -1980,7 +1980,7 @@ _SPIRV_OP(BuildNDRange, true, 6)
 
 class SPIRVPipeInstBase:public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityPipes);
   }
 };
@@ -2004,7 +2004,7 @@ _SPIRV_OP(GetMaxPipePackets, true, 6)
 
 class SPIRVPipeStorageInstBase :public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityPipeStorage, CapabilityPipes);
   }
 };
@@ -2018,7 +2018,7 @@ _SPIRV_OP(CreatePipeFromPipeStorage, true, 4)
 
 class SPIRVGroupInstBase:public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityGroups);
   }
 };
@@ -2047,7 +2047,7 @@ _SPIRV_OP(GroupCommitWritePipe, false, 6)
 
 class SPIRVAtomicInstBase:public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityInt64Atomics);
   }
 };
@@ -2079,7 +2079,7 @@ _SPIRV_OP(MemoryBarrier, false, 3)
 
 class SPIRVImageInstBase:public SPIRVInstTemplateBase {
 public:
-  SPIRVCapVec getRequiriedCapability() const {
+  SPIRVCapVec getRequiredCapability() const override {
     return getVec(CapabilityImageBasic);
   }
 };
@@ -2110,6 +2110,54 @@ _SPIRV_OP(SpecConstantOp, true, 4, true, 0)
 _SPIRV_OP(GenericPtrMemSemantics, true, 4, false)
 _SPIRV_OP(GenericCastToPtrExplicit, true, 5, false, 1)
 #undef _SPIRV_OP
+
+class SPIRVSubgroupShuffleINTELInstBase:public SPIRVInstTemplateBase {
+protected:
+  SPIRVCapVec getRequiredCapability() const override {
+      return getVec(CapabilitySubgroupShuffleINTEL);
+  }
+};
+
+#define _SPIRV_OP(x, ...) \
+  typedef SPIRVInstTemplate<SPIRVSubgroupShuffleINTELInstBase, Op##x, __VA_ARGS__> \
+      SPIRV##x;
+// Intel Subgroup Shuffle Instructions
+_SPIRV_OP(SubgroupShuffleINTEL,     true, 5)
+_SPIRV_OP(SubgroupShuffleDownINTEL, true, 6)
+_SPIRV_OP(SubgroupShuffleUpINTEL,   true, 6)
+_SPIRV_OP(SubgroupShuffleXorINTEL,  true, 5)
+#undef _SPIRV_OP
+
+class SPIRVSubgroupBufferBlockIOINTELInstBase:public SPIRVInstTemplateBase {
+protected:
+  SPIRVCapVec getRequiredCapability() const override {
+      return getVec(CapabilitySubgroupBufferBlockIOINTEL);
+  }
+};
+
+#define _SPIRV_OP(x, ...) \
+  typedef SPIRVInstTemplate<SPIRVSubgroupBufferBlockIOINTELInstBase, Op##x, __VA_ARGS__> \
+      SPIRV##x;
+// Intel Subgroup Buffer Block Read and Write Instructions
+_SPIRV_OP(SubgroupBlockReadINTEL,   true, 4)
+_SPIRV_OP(SubgroupBlockWriteINTEL,  false, 3)
+#undef _SPIRV_OP
+
+class SPIRVSubgroupImageBlockIOINTELInstBase:public SPIRVInstTemplateBase {
+protected:
+  SPIRVCapVec getRequiredCapability() const override {
+      return getVec(CapabilitySubgroupImageBlockIOINTEL);
+  }
+};
+
+#define _SPIRV_OP(x, ...) \
+  typedef SPIRVInstTemplate<SPIRVSubgroupImageBlockIOINTELInstBase, Op##x, __VA_ARGS__> \
+      SPIRV##x;
+// Intel Subgroup Image Block Read and Write Instructions
+_SPIRV_OP(SubgroupImageBlockReadINTEL,  true, 5)
+_SPIRV_OP(SubgroupImageBlockWriteINTEL, false, 4)
+#undef _SPIRV_OP
+
 
 SPIRVSpecConstantOp *createSpecConstantOpInst(SPIRVInstruction *Inst);
 SPIRVInstruction *createInstFromSpecConstantOp(SPIRVSpecConstantOp *C);
