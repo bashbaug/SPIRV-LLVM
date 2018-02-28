@@ -1359,10 +1359,26 @@ operator<< (spv_ostream &O, SPIRVModule &M) {
   for (auto &I:MI.CapMap)
     O << *I.second;
 
-  for (auto &I:M.getExtension()) {
-    assert(!I.empty() && "Invalid extension");
-    O << SPIRVExtension(&M, I);
+  std::set<std::string> SPIRVExtensions;
+  for (auto &I:MI.CapMap) {
+    switch (I.second->get()) {
+    case Capability::CapabilitySubgroupShuffleINTEL:
+    case Capability::CapabilitySubgroupBufferBlockIOINTEL:
+    case Capability::CapabilitySubgroupImageBlockIOINTEL:
+        SPIRVExtensions.insert("SPV_INTEL_subgroups");
+        break;
+    default: break;
+    }
   }
+  for (auto &E:SPIRVExtensions) {
+    O << SPIRVExtension(&M, E);
+  }
+
+// We shouldn't need this section of code - this consists of OpenCL extensions, not SPIR-V extensions.
+//  for (auto &I:M.getExtension()) {
+//    assert(!I.empty() && "Invalid extension");
+//    O << SPIRVExtension(&M, I);
+//  }
 
   for (auto &I:MI.IdBuiltinMap)
     O <<  SPIRVExtInstImport(&M, I.first, SPIRVBuiltinSetNameMap::map(I.second));

@@ -687,6 +687,7 @@ public:
       return SPIRV_1_0;
     }
   }
+  SPIRVCapabilityKind get() const { return Kind; }
 private:
   SPIRVCapabilityKind Kind;
 };
