@@ -28,8 +28,7 @@
 ; CHECK-SPIRV: Capability SubgroupShuffleINTEL
 ; CHECK-SPIRV: Capability SubgroupBufferBlockIOINTEL
 ; CHECK-SPIRV: Capability SubgroupImageBlockIOINTEL
-; CHECK-SPIRV: Extension "cl_intel_subgroups"
-; CHECK-SPIRV: Extension "cl_intel_subgroups_short"
+; CHECK-SPIRV: Extension "SPV_INTEL_subgroups"
 
 ; CHECK-SPIRV: SubgroupShuffleINTEL
 ; CHECK-SPIRV: SubgroupShuffleDownINTEL
